@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "name": "sample",
+  "fields": [
+    {"name": "channel", "type": "string"},
+    {"name": "sample_time", "type" : { "type" : "long", "logicalType" : "timestamp-millis" }},
+    {"name": "sample_value", "type": "double"},
+    {"name": "reason", "type": "int"}
+  ]
+}

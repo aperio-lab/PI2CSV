@@ -1,0 +1,16 @@
+version: 1
+
+root:
+  level: DEBUG
+  handlers: [console]
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    stream: ext://sys.stdout
+    formatter: default-formatter
+
+formatters:
+  default-formatter:
+    format: '[%(asctime)s|%(name)s|%(levelname)s|%(processName)s:%(threadName)s|%(filename)s, line %(lineno)s in %(funcName)s] %(message)s'

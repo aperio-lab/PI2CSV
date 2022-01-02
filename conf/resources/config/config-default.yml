@@ -1,0 +1,46 @@
+pi:
+  header_name_config: PI-Config
+  header_name_creds: PI-Creds
+  num_of_retries: 3
+  authentication_mode: 0
+
+  host: 'localhost' # PI host or IP address
+  port: 443
+  network_credentials_username: 'piuser'
+  network_credentials_password: 'password!'
+
+
+piwebapi:
+  max_ids_in_url: 100
+  web_id_type: IDOnly
+  max_count_allowed: 150000
+  verify_ssl: False
+  max_history_period_for_archive: 6mo
+  max_history_days_period_for_archive: 365
+  snapshot_updates_method: POLLING
+
+pi_data:
+  valid_data_code: -1
+  end_of_archive_data_code: -2
+  invalid_data_codes: [-2, 248]
+  time_between_snapshot_events_poll: 5
+  time_between_changes_poll: 5
+  point_list_page_size: 1000
+  snapshot_events_per_poll: 10000
+
+data:
+  buffer_size: 260
+  writing_buffer_size: 80000
+
+packers:
+  ts_val_pack: d d
+  ts_val_err_pack: d d h
+  cid_ts_val_err_pack: i d d h
+  avro: True
+
+dao:
+  source: PIWEBAPI
+
+webapi:
+  api_host: 'localhost'
+  api_port: '443'
