@@ -1,17 +1,11 @@
 aiohttp==3.4.0
 click==6.7
 pyyaml==3.13
-aiohttp_swagger==1.0.5
 asyncio==3.4.3
 pydash==4.7.3
-influxdb==5.2.0
-numpy==1.15.3
 aiostream==0.3.1
-pandas==0.24.2
 ciso8601==1.0.1
 tzlocal==1.5.1
 requests==2.24.0
 requests-kerberos==0.12.0
 avro==1.10.2
-logtail-python==0.1.2
-coralogix-logger==2.0.5
