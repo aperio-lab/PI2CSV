@@ -10,10 +10,10 @@
 * pip install -r requirements.txt
 
 ## Usage
-* *python manage.py --host MyPIHost.com --user piuser --password pipassword --name_filter tag_name_* --limit 150000 
+* python manage.py --host MyPIHost.com --user piuser --password pipassword --name_filter tag_name\* --limit 150000 
 
 Alternatively, host, user and password can be defined in **conf/resources/config/config-default.yml**
-* *python manage.py --name_filter tag_name_* --limit 150000 --
+* python manage.py --name_filter tag_name\* --limit 150000 --data_type n_samples_archive --export_dir ../DataExport
 
 
 ## Options
