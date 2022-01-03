@@ -7,7 +7,7 @@
 
 ## Install and Run:
 * git clone https://github.com/aperio-lab/PI2CSV.git
-* pip install -r requirements.txt
+* pip install -r requirements.txt && pip install ./osisoft.pidevclub.piwebapi.tar
 
 ## Usage
 * python manage.py --host MyPIHost.com --user piuser --password pipassword --name_filter tag_name\* --limit 150000 
