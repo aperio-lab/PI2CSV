@@ -41,7 +41,7 @@ MAX_HISTORY_DAYS_PERIOD_FOR_ARCHIVE = settings.piwebapi.max_history_days_period_
 MAX_COUNT_PI_POINTS_SEARCH = 10000
 DATA_SERVER_NAME = settings.piwebapi.data_server_name
 TIME_BETWEEN_SNAPSHOT_EVENTS_POLL = int(settings.pi_data.time_between_snapshot_events_poll)
-SNAPSHOT_COUNTER_CALC_INTERVAL = 60 * 2
+SNAPSHOT_CSV_SPLIT_INTERVAL = 15
 
 
 default_pi_server_ip = settings.pi.host
@@ -825,7 +825,7 @@ class PointWrapper(BaseWebAPIWrapper):
                     for idx in range(0, markers_list_length, MAX_IDS_IN_URL)
                 ]
                 yield stream.merge(*iterators_queue).stream()
-            self._logger.info('Going to sleep for %s seconds before next stream iteration' % TIME_BETWEEN_SNAPSHOT_EVENTS_POLL)
+            self._logger.debug('Going to sleep for %s seconds before next stream iteration' % TIME_BETWEEN_SNAPSHOT_EVENTS_POLL)
             await asyncio.sleep(TIME_BETWEEN_SNAPSHOT_EVENTS_POLL)
 
     async def retrieve_stream_set_updates(self, stream_set_api, latest_markers: list):
@@ -1675,14 +1675,17 @@ class PIDataToCSV:
         except Exception as e:
             self.logger.exception(e)
 
-    async def write_buffer_to_csv(self, async_data_source, **kwargs):
+    async def write_buffer_to_csv(self, async_data_source):
         buffer = []
         stream_counter = dict()
         stream_start_time = time.monotonic()
+        split_interval = self.kwargs.get('spit_interval')
 
         def init_file():
-            kwargs['filename'] = os.path.dirname(os.path.realpath(__file__)) + \
-                           f'/snapshot_export_{datetime.now().strftime("%Y-%m-%dT%H:%M:%S")}.csv'
+            self.kwargs['filename'] = os.path.realpath(self.kwargs.get('export_dir') +
+                           f'/snapshot_export_{datetime.now().strftime("%Y-%m-%dT%H:%M:%S")}.csv')
+
+            self.logger.info(f'Creating new CSV file: {self.kwargs["filename"]}')
 
         init_file()
 
@@ -1702,12 +1705,12 @@ class PIDataToCSV:
 
                 time_since_stream_start = time.monotonic() - stream_start_time
 
-                if time_since_stream_start >= SNAPSHOT_COUNTER_CALC_INTERVAL:
+                if time_since_stream_start / 60 >= split_interval:
                     init_file()
                     total_snapshot_received = 0
                     for key, value in stream_counter.items():
                         total_snapshot_received += value
-                    self.logger.debug(f'Got {total_snapshot_received} samples on {len(stream_counter.items())} pi points from async stream_data')
+                    self.logger.info(f'Got {total_snapshot_received} samples on {len(stream_counter.items())} pi points from async stream_data')
                     stream_counter = dict()
                     stream_start_time = time.monotonic()
 
@@ -1755,6 +1758,7 @@ class PIDataToCSV:
 @click.option('--data_server', type=str, help='PI Data Server web_id for tags search and data export', default=None)
 @click.option('--date_format', type=str, help='Date format to use when writing time-series to CSV', default='%Y-%m-%d %H:%M:%S')
 @click.option('--export_dir', type=str, help='Directory path for CSV export', default=os.path.realpath(os.path.dirname(__file__)))
+@click.option('--spit_interval', type=int, help='CSV split interval (minutes). New CSV file will be created each split_interval minutes', default=SNAPSHOT_CSV_SPLIT_INTERVAL)
 def cli(*args, **kwargs):
 
     loop = asyncio.get_event_loop()

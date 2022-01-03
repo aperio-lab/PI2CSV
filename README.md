@@ -3,7 +3,6 @@
 
 ## Dependencies
 * Python 3.7
-* OSISoft PI WebApi interface package installed
 
 ## Install and Run:
 * git clone https://github.com/aperio-lab/PI2CSV.git
@@ -14,6 +13,7 @@
 
 Alternatively, host, user and password can be defined in **conf/resources/config/config-default.yml**
 * python manage.py --name_filter tag_name\* --limit 150000 --data_type n_samples_archive --export_dir ../DataExport
+* python manage.py --name_filter tag_name\* --data_type snapshot --export_dir ../DataExport
 
 
 ## Options
@@ -28,3 +28,5 @@ Alternatively, host, user and password can be defined in **conf/resources/config
 * --data_server: PI Data Server web_id for tags search and data export. DEFAULT=None
 * --date_format: Date format to use when writing time-series to CSV. DEFAULT='%Y-%m-%d %H:%M:%S'
 * --export_dir: Directory path for CSV export. DEFAULT=os.path.realpath(os.path.dirname(__file__))
+
+(For a full list of options, run: python main.py --help)
